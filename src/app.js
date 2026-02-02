@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-require("dotenv").config();
 
 const authRoutes = require("./routes/auth.routes");
 const salesRoutes = require("./routes/sales.routes");
@@ -9,7 +8,7 @@ const dashboardRoutes = require("./routes/dashboard.routes");
 const app = express();
 
 /* ======================
-   CORS CONFIG (IMPORTANT)
+   CORS CONFIG
 ====================== */
 app.use(
   cors({
@@ -35,16 +34,10 @@ app.use("/api/sales", salesRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 
 /* ======================
-   HEALTH CHECK (RENDER)
+   HEALTH CHECK
 ====================== */
 app.get("/", (req, res) => {
   res.send("API is running 🚀");
 });
 
-/* ======================
-   SERVER
-====================== */
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+module.exports = app;
