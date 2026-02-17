@@ -8,27 +8,75 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique
-  email     String   @unique
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
   password  String
-  role      Role     @default(USER)
-  sales     Sale[]
-  createdAt DateTime @default(now())
+  role      Role      @default(USER)
+  invoices  Invoice[]
+  expenses  Expense[]
+  payments  Payment[]
+  createdAt DateTime  @default(now())
 }
 
-model Sale {
-  id           Int      @id @default(autoincrement())
-  userId       Int
-  date         DateTime
-  amount       Decimal
-  items        String
-  customerName String
-  user         User     @relation(fields: [userId], references: [id])
-  createdAt    DateTime @default(now())
+model Customer {
+  id       Int       @id @default(autoincrement())
+  name     String
+  phone    String?
+  invoices Invoice[]
+}
+
+model Invoice {
+  id          Int           @id @default(autoincrement())
+  userId      Int
+  customerId  Int
+  date        DateTime
+  size        String
+  agreement   Decimal
+  paidAmount  Decimal       @default(0)
+  status      InvoiceStatus @default(UNPAID)
+  createdAt   DateTime      @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+  customer  Customer @relation(fields: [customerId], references: [id])
+  payments  Payment[]
+}
+
+model Payment {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  invoiceId Int
+  amount    Decimal
+  type      PaymentType
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  invoice Invoice @relation(fields: [invoiceId], references: [id])
+}
+
+model Expense {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  title     String
+  amount    Decimal
+  date      DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
 }
 
 enum Role {
   ADMIN
   USER
+}
+
+enum InvoiceStatus {
+  UNPAID
+  PARTIAL
+  PAID
+}
+
+enum PaymentType {
+  ADVANCE
+  BALANCE
 }

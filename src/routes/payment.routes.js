@@ -2,11 +2,11 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  getDashboard,
-} = require("../controllers/dashboard.controller");
+  addPayment,
+} = require("../controllers/payment.controller");
 
 const { auth } = require("../middleware/auth.middleware");
 
-router.get("/stats", auth, getDashboard);
+router.post("/", auth, addPayment);
 
 module.exports = router;

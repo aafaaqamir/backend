@@ -2,7 +2,9 @@ const express = require("express");
 const cors = require("cors");
 
 const authRoutes = require("./routes/auth.routes");
-const salesRoutes = require("./routes/sales.routes");
+const invoiceRoutes = require("./routes/invoice.routes");
+const paymentRoutes = require("./routes/payment.routes");
+const expenseRoutes = require("./routes/expense.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
 
 const app = express();
@@ -14,7 +16,7 @@ app.use(
   cors({
     origin: [
       "https://sales-frontend-rho.vercel.app",
-      "http://localhost:5000",
+      "http://localhost:5173",
     ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
@@ -30,9 +32,10 @@ app.use(express.json());
    ROUTES
 ====================== */
 app.use("/api/auth", authRoutes);
-app.use("/api/sales", salesRoutes);
+app.use("/api/invoices", invoiceRoutes);
+app.use("/api/payments", paymentRoutes);
+app.use("/api/expenses", expenseRoutes);
 app.use("/api/dashboard", dashboardRoutes);
-
 /* ======================
    HEALTH CHECK
 ====================== */
