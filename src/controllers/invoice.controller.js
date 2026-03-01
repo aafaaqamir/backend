@@ -87,25 +87,29 @@ exports.createInvoice = async (req, res) => {
 // ==============================
 exports.getInvoices = async (req, res) => {
   try {
-    const where =
-      req.user.role === "ADMIN"
-        ? {}
-        : { userId: req.user.id };
-
     const invoices = await prisma.invoice.findMany({
-      where,
       include: {
         customer: true,
         payments: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            role: true,
+          },
+        },
       },
-      orderBy: { date: "desc" },
+      orderBy: {
+        date: "desc",
+      },
     });
 
-    res.json(invoices);
+    res.status(200).json(invoices);
   } catch (err) {
     console.error("Get Invoice Error:", err);
     res.status(500).json({
-      msg: "Failed to fetch invoices",
+      message: "Failed to fetch invoices",
+      error: err.message,
     });
   }
 };

@@ -38,15 +38,7 @@ exports.createExpense = async (req, res) => {
 
 exports.getExpenses = async (req, res) => {
   try {
-    let where = {};
-
-    // If NOT admin → only own expenses
-    if (req.user.role !== "ADMIN") {
-      where.userId = req.user.id;
-    }
-
     const expenses = await prisma.expense.findMany({
-      where,
       include: {
         user: {
           select: {
@@ -61,12 +53,13 @@ exports.getExpenses = async (req, res) => {
       },
     });
 
-    res.json(expenses);
+    res.status(200).json(expenses);
   } catch (err) {
     console.error("Get Expenses Error:", err);
 
     res.status(500).json({
-      msg: "Failed to fetch expenses",
+      message: "Failed to fetch expenses",
+      error: err.message,
     });
   }
 };
